@@ -104,6 +104,10 @@ a:hover {
   letter-spacing: 5px;
 }
 
+img {
+    border: 5px solid #0F0E10;
+}
+
 
 /* Section Padding
   --------------------------------------------------------------*/
