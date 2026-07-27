@@ -172,7 +172,7 @@
           <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: 44px; margin: 0 0 14px; text-transform: none;">My Projects<span style="color: {{ accentColor }};">.</span></h2>
           <p style="font-size: 15px; color: #a49f98; margin: 0;">Here's a showcase of some of my favourite projects. More to come...</p>
         </div>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 28px;">
+        <div style="display: grid; grid-template-columns: {{ projectsGrid }}; gap: 28px;">
           <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
             <div onClick="{{ openProject }}" data-id="{{ p.id }}" style="cursor: pointer; border-radius: 16px; overflow: hidden; background: linear-gradient(160deg, #1a171e, #100e12); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; box-shadow: 0 24px 48px -18px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.05); transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;" style-hover="border-color: rgba(255,58,88,0.4); transform: translateY(-6px); box-shadow: 0 32px 60px -18px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08);">
               <div style="aspect-ratio: 16/10; overflow: hidden; position: relative; background: #1a1720;">
@@ -652,6 +652,7 @@ class Component extends DCLogic {
       contactPad: isMobile ? '64px 20px' : '100px 48px',
       footerPadX: isMobile ? '20px' : '48px',
       twoColGrid: isMobile ? '1fr' : 'minmax(280px, 1.2fr) minmax(240px, 1fr)',
+      projectsGrid: isMobile ? '1fr' : 'repeat(auto-fit, minmax(400px, 1fr))',
       navLinksDisplay: isMobile ? 'none' : 'flex',
       lightboxArrowGap: isMobile ? '8px' : '24px',
       openArtMobile: (e) => { e.preventDefault(); this.setState({ showArt: true, mobileMenuOpen: false }); window.scrollTo(0, 0); },
