@@ -324,8 +324,8 @@
         <h1 style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 6vw, 64px); margin: 0 0 28px; text-transform: none;">{{ activeProject.title }}</h1>
 
         <div style="text-align: center; margin: 0 0 40px;">
-          <div style="border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.3); box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); display: inline-block; max-width: 100%;">
-            <img src="{{ activeProject.cover }}" alt="{{ activeProject.title }}" style="max-width: 100%; max-height: 70vh; width: auto; height: auto; object-fit: contain; display: block;">
+          <div style="border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.3); box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); display: inline-block; max-width: 100%; box-sizing: border-box;">
+            <img src="{{ activeProject.cover }}" alt="{{ activeProject.title }}" style="max-width: 100%; max-height: 70vh; width: auto; height: auto; object-fit: contain; display: block; box-sizing: border-box;">
           </div>
         </div>
 
