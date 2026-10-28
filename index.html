@@ -328,6 +328,12 @@
           </div>
         </sc-if>
 
+        <sc-if value="{{ activeProject.localVideo }}" hint-placeholder-val="{{ false }}">
+          <div style="border-radius: 12px; overflow: hidden; margin: 0 0 48px; background: #000; box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.06);">
+            <video src="{{ activeProject.localVideo }}" controls="" muted="" loop="" playsInline="" preload="metadata" poster="{{ activeProject.localVideoPoster }}" style="display: block; width: 100%; height: auto;"></video>
+          </div>
+        </sc-if>
+
         <sc-if value="{{ activeProject.learned }}" hint-placeholder-val="{{ false }}">
           <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 16px;">Reflection</h3>
           <p style="font-size: 16px; line-height: 1.85; color: #cfcac4; margin: 0;">{{ activeProject.learned }}</p>
@@ -445,6 +451,12 @@ class Component extends DCLogic {
       blurb: "A Mirror's Edge-inspired parkour system built in Unity, with plans to keep expanding it.",
       wip: true,
       role: 'Solo Developer', tools: 'Unity, C#',
+      gallery: [
+        { src: 'images/MirrorsEdge-Vault.jpg', caption: 'Approaching a vault obstacle' },
+        { src: 'images/MirrorsEdge-WallRun.jpg', caption: 'Wall running' },
+        { src: 'images/MirrorsEdge-Route.jpg', caption: 'Rooftop route' }
+      ],
+      localVideo: 'images/MirrorsEdge.mp4', localVideoPoster: 'images/MirrorsEdge-Route.jpg',
       description: "This project is my take on Mirror's Edge-style movement in Unity: fluid vaulting, wall-running and momentum-driven traversal across rooftops. The focus has been on making movement read clearly and chain smoothly from one action into the next, rather than treating each parkour move as an isolated animation. It's an ongoing system I plan to keep expanding with more traversal moves and tighter movement feel.",
       process: [
         { num: 1, title: 'Core Movement Foundation', text: "Started with a custom character controller in Unity to get full control over acceleration, momentum and air control before adding any parkour moves on top." },
