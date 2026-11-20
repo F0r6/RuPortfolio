@@ -470,17 +470,17 @@ class Component extends DCLogic {
     {
       id: 'racingvr', tag: 'Unity · VR · Work In Progress', title: 'RacingVR',
       blurb: 'A cockpit-first F1 racing game for PC VR, built in the hands-on style of VTOL VR.',
-      wip: true, cover: 'images/RacingVR/car.jpg',
+      wip: true, cover: 'images/car.jpg',
       role: 'Solo Developer', tools: 'Unity 6, C#, XR Interaction Toolkit, Meta Quest 3',
       gallery: [
-        { src: 'images/RacingVR/car.jpg', caption: 'The F1 car on track' },
-        { src: 'images/RacingVR/frame1.jpg', caption: 'Driver view, both hands on the wheel' },
-        { src: 'images/RacingVR/track.jpg', caption: 'A circuit generated from map data, with elevation and racing line' },
-        { src: 'images/RacingVR/frame3.jpg', caption: 'Onboard camera through a corner' },
-        { src: 'images/RacingVR/frame5.jpg', caption: 'Chase camera' },
-        { src: 'images/RacingVR/frame6.jpg', caption: 'Trackside spectator camera' }
+        { src: 'images/car.jpg', caption: 'The F1 car on track' },
+        { src: 'images/frame1.jpg', caption: 'Driver view, both hands on the wheel' },
+        { src: 'images/track.jpg', caption: 'A circuit generated from map data, with elevation and racing line' },
+        { src: 'images/frame3.jpg', caption: 'Onboard camera through a corner' },
+        { src: 'images/frame5.jpg', caption: 'Chase camera' },
+        { src: 'images/frame6.jpg', caption: 'Trackside spectator camera' }
       ],
-      localVideo: 'images/RacingVR/RacingVR.mp4', localVideoPoster: 'images/RacingVR/poster.jpg',
+      localVideo: 'images/RacingVR.mp4', localVideoPoster: 'images/poster.jpg',
       description: "RacingVR is a work-in-progress PC VR racing game inspired by the cockpit-focused, hands-on interaction style of VTOL VR. Rather than hiding controls behind menus or simple button presses, the player physically grabs the steering wheel, pulls the shift paddles and turns the rotary dials inside an F1-style cockpit, so racing feels tactile and grounded in VR. Underneath the cockpit sits a full car simulation (hybrid power unit, DRS, tyre wear and temperature) and a set of real-world circuits generated from map data. The aim is to support multiple cars and let players chase their own and their friends' lap times. I've been building it for around four months and testing it on a Meta Quest 3.",
       process: [
         { num: 1, title: 'A Wheel You Actually Hold', text: "Built a grabbable VR steering wheel on top of the XR Interaction Toolkit, where both hands lock onto the rim and the wheel's rotation is worked out from where your hands move, rather than from a thumbstick. Hands snap into posed grips on the wheel so they stay mounted while you drive." },
