@@ -469,12 +469,29 @@ class Component extends DCLogic {
     },
     {
       id: 'racingvr', tag: 'Unity · VR · Work In Progress', title: 'RacingVR',
-      blurb: 'A VR racing game built in a similar style to VTOL VR.',
-      wip: true,
-      role: 'Solo Developer', tools: 'Unity, VR',
-      description: "RacingVR is a work-in-progress VR racing game inspired by the cockpit-focused, hands-on interaction style of VTOL VR. Rather than abstract controls behind menus or simple button presses, the goal is to have the player physically reach for and operate switches, levers and wheel controls inside the cockpit itself, so racing feels tactile and grounded in VR.",
+      blurb: 'A cockpit-first F1 racing game for PC VR, built in the hands-on style of VTOL VR.',
+      wip: true, cover: 'images/RacingVR/car.jpg',
+      role: 'Solo Developer', tools: 'Unity 6, C#, XR Interaction Toolkit, Meta Quest 3',
+      gallery: [
+        { src: 'images/RacingVR/car.jpg', caption: 'The F1 car on track' },
+        { src: 'images/RacingVR/frame1.jpg', caption: 'Driver view, both hands on the wheel' },
+        { src: 'images/RacingVR/track.jpg', caption: 'A circuit generated from map data, with elevation and racing line' },
+        { src: 'images/RacingVR/frame3.jpg', caption: 'Onboard camera through a corner' },
+        { src: 'images/RacingVR/frame5.jpg', caption: 'Chase camera' },
+        { src: 'images/RacingVR/frame6.jpg', caption: 'Trackside spectator camera' }
+      ],
+      localVideo: 'images/RacingVR/RacingVR.mp4', localVideoPoster: 'images/RacingVR/poster.jpg',
+      description: "RacingVR is a work-in-progress PC VR racing game inspired by the cockpit-focused, hands-on interaction style of VTOL VR. Rather than hiding controls behind menus or simple button presses, the player physically grabs the steering wheel, pulls the shift paddles and turns the rotary dials inside an F1-style cockpit, so racing feels tactile and grounded in VR. Underneath the cockpit sits a full car simulation (hybrid power unit, DRS, tyre wear and temperature) and a set of real-world circuits generated from map data. The aim is to support multiple cars and let players chase their own and their friends' lap times. I've been building it for around four months and testing it on a Meta Quest 3.",
       process: [
-        { num: 1, title: 'Work In Progress', text: "This project is still early in development. Full process details will be added as the core VR cockpit and racing systems come together." }
+        { num: 1, title: 'A Wheel You Actually Hold', text: "Built a grabbable VR steering wheel on top of the XR Interaction Toolkit, where both hands lock onto the rim and the wheel's rotation is worked out from where your hands move, rather than from a thumbstick. Hands snap into posed grips on the wheel so they stay mounted while you drive." },
+        { num: 2, title: 'Cockpit Controls', text: "Added shift paddles behind the wheel, pedals, pressable cockpit buttons and rotary dials you twist by hand, plus thumb controls on the wheel for quick inputs. Every control shares one base class, so new switches can be added to the cockpit without rewriting the grab logic." },
+        { num: 3, title: 'F1 Car Simulation', text: "Wrote the car's behaviour as its own maths layer: gearbox, a hybrid power unit with energy deployment tracked per lap, DRS zones, an overtake mode, tyre compounds and a tyre wear and temperature model. Car setups are data-driven so different cars can be tuned without touching code." },
+        { num: 4, title: 'Real Circuits from Map Data', text: "Built an editor tool that generates tracks from OpenStreetMap layouts, including elevation, kerbs, trackside objects, surrounding buildings and trees. It currently covers eight real circuits, including Silverstone, Spa, Monaco, Hungaroring, Hockenheim, Red Bull Ring, Sepang and Jeddah." },
+        { num: 5, title: 'Timing and the Racing Line', text: "Added a lap timer with sector timing, a live delta bar against your best lap, a working cockpit dashboard and a generated racing line, so players can see exactly where they're gaining or losing time." },
+        { num: 6, title: 'Sound and Comfort', text: "Engine audio is synthesised from the car's RPM and load rather than played from fixed loops. A comfort vignette that responds to the car's motion, plus working mirrors, keep the experience readable and comfortable at speed in a headset." },
+        { num: 7, title: 'Testing the Maths', text: "Kept the steering and vehicle maths in separate assemblies with Edit Mode unit tests covering steering, gearing, tyre wear and game feel, so physics changes can be checked without putting the headset on every time." },
+        { num: 8, title: 'Spectator Cameras', text: "Added TV-style race cameras and a spectator director that cuts between trackside angles automatically, for recording footage of laps from outside the cockpit." },
+        { num: 9, title: 'Up Next', text: "Next up are multiple selectable cars, saved best laps and a ghost car to race against, so players can compete on times with their friends." }
       ]
     }
   ];
