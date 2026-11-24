@@ -21,6 +21,12 @@
   .mood-layer { opacity: 0; animation: moodCycle 12s infinite; }
   @media (prefers-reduced-motion: reduce) { .mood-layer { animation: none; } .mood-layer.mood-first { opacity: 1; } }
   body { margin: 0; background: #0a0a0a; }
+  .contact-menu { opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s; }
+  .nav-contact:hover .contact-menu, .nav-contact:focus-within .contact-menu { opacity: 1; visibility: visible; transform: none; transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s; }
+  .contact-item { transition: background 0.15s; }
+  .contact-item:hover, .contact-item:focus-visible { background: rgba(255,255,255,0.06); }
+  .card-preview { opacity: 0; transition: opacity 0.35s ease; }
+  .card-preview.on { opacity: 1; }
   a { color: var(--accent-color, #ff3a58); }
   a:hover { color: #ff6b81; }
   ::selection { background: var(--accent-dark, #bd002c); color: #fff; }
@@ -37,11 +43,12 @@
   </div>
 </sc-if>
 
-<div style="--hover-scale: {{ motionScale }}; --hover-speed: {{ motionSpeed }}; --accent-color: {{ accentColor }}; --accent-dark: {{ accentColorDark }}; font-family: 'Inter', sans-serif; background: #0a0a0a; color: #f2efec; min-height: 100vh; position: relative; overflow-x: hidden;">
+<div style="--hover-scale: {{ motionScale }}; --hover-speed: {{ motionSpeed }}; --accent-color: {{ accentColor }}; --accent-dark: {{ accentColorDark }}; font-family: 'Inter', sans-serif; background: #0a0a0a; color: #f2efec; min-height: 100vh; position: relative; overflow-x: clip;">
 
   <div style="position: fixed; inset: 0; background-image: url('images/circuit-bg-grey.png'); background-repeat: no-repeat; background-position: {{ bgPositionX }}% center; background-size: cover; transform: scale({{ bgScaleFactor }}); transform-origin: {{ bgPositionX }}% center; opacity: 0.08; mix-blend-mode: screen; pointer-events: none; z-index: 0;"></div>
 
-  <nav style="position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: {{ navPad }}; background: rgba(11,10,12,0.75); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); box-shadow: 0 8px 24px -8px rgba(0,0,0,0.5);">
+  <header style="position: sticky; top: 0; z-index: 40;">
+  <nav style="position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: {{ navPad }}; background: rgba(11,10,12,0.75); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); box-shadow: 0 8px 24px -8px rgba(0,0,0,0.5);">
     <a href="#top" style="display: flex; align-items: center;">
       <img src="images/LogoSolo.png" alt="Ruairidh Booth logo" style="height: 48px; width: auto;">
     </a>
@@ -57,12 +64,30 @@
       <a href="#about" style="font-size: 14px; font-weight: 500; text-decoration: none; color: #cfcac4;" style-hover="color: {{ accentColor }};">About Me</a>
       <a href="#work" style="font-size: 14px; font-weight: 500; text-decoration: none; color: #cfcac4;" style-hover="color: {{ accentColor }};">Portfolio</a>
       <a href="{{ artHref }}" style="font-size: 14px; font-weight: 500; text-decoration: none; color: #cfcac4;" style-hover="color: {{ accentColor }};">Art Portfolio</a>
-      <a href="#contact" style="font-size: 14px; font-weight: 700; text-decoration: none; color: #f2efec; border-bottom: 2px solid {{ accentColorDark }}; padding-bottom: 4px;" style-hover="color: {{ accentColor }};">Contact</a>
+      <div class="nav-contact" style="position: relative;">
+        <a href="#contact" aria-haspopup="true" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; text-decoration: none; color: #f2efec; border-bottom: 2px solid {{ accentColorDark }}; padding-bottom: 4px;" style-hover="color: {{ accentColor }};">Contact <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></a>
+        <div class="contact-menu" style="position: absolute; right: -12px; top: 100%; padding-top: 16px; z-index: 50;">
+          <div style="min-width: 260px; padding: 8px; border-radius: 14px; background: rgba(18,15,20,0.97); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 24px 48px -12px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,58,88,0.08);">
+            <a class="contact-item" href="mailto:ruairidh.booth@gmail.com" style="display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: #f2efec;">
+              <span style="width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: rgba(255,58,88,0.12); color: #ff3a58; flex: none;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span>
+              <span style="display: flex; flex-direction: column; line-height: 1.3;"><span style="font-size: 14px; font-weight: 700;">Email</span><span style="font-size: 12px; color: #a49f98;">ruairidh.booth@gmail.com</span></span>
+            </a>
+            <a class="contact-item" href="https://www.linkedin.com/in/ruairidhbooth" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: #f2efec;">
+              <span style="width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: rgba(255,58,88,0.12); color: #ff3a58; flex: none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3v-11zm6.5 0h3.8v1.5h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v5.45h-4v-4.83c0-1.15-.02-2.63-1.6-2.63-1.6 0-1.85 1.25-1.85 2.55v4.91h-4v-11z"/></svg></span>
+              <span style="display: flex; flex-direction: column; line-height: 1.3;"><span style="font-size: 14px; font-weight: 700;">LinkedIn</span><span style="font-size: 12px; color: #a49f98;">in/ruairidhbooth</span></span>
+            </a>
+            <a class="contact-item" href="https://github.com/F0r6" target="_blank" rel="noopener" style="display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 10px; text-decoration: none; color: #f2efec;">
+              <span style="width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: rgba(255,58,88,0.12); color: #ff3a58; flex: none;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.6 9.6 0 0 1 12 6.8c.85 0 1.7.11 2.5.33 1.9-1.29 2.74-1.02 2.74-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg></span>
+              <span style="display: flex; flex-direction: column; line-height: 1.3;"><span style="font-size: 14px; font-weight: 700;">GitHub</span><span style="font-size: 12px; color: #a49f98;">github.com/F0r6</span></span>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </nav>
 
   <sc-if value="{{ mobileMenuOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position: sticky; top: 0; z-index: 39; display: flex; flex-direction: column; gap: 22px; padding: 24px 24px 30px; background: rgba(11,10,12,0.97); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.5);">
+    <div style="position: absolute; left: 0; right: 0; top: 100%; z-index: 1; display: flex; flex-direction: column; gap: 22px; padding: 24px 24px 30px; background: rgba(11,10,12,0.97); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,0.07); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.5);">
       <a href="#top" onClick="{{ closeMobileMenu }}" style="font-size: 17px; font-weight: 600; text-decoration: none; color: #f2efec;">Home</a>
       <a href="#about" onClick="{{ closeMobileMenu }}" style="font-size: 17px; font-weight: 600; text-decoration: none; color: #f2efec;">About Me</a>
       <a href="#work" onClick="{{ closeMobileMenu }}" style="font-size: 17px; font-weight: 600; text-decoration: none; color: #f2efec;">Portfolio</a>
@@ -70,6 +95,7 @@
       <a href="#contact" onClick="{{ closeMobileMenu }}" style="font-size: 17px; font-weight: 700; text-decoration: none; color: {{ accentColor }};">Contact</a>
     </div>
   </sc-if>
+  </header>
 
   <section id="top" style="min-height: 82vh; display: flex; align-items: center; padding: {{ pagePad }}; position: relative;">
     <sc-if value="{{ isGridHero }}" hint-placeholder-val="{{ true }}">
@@ -214,9 +240,17 @@
         </div>
         <div style="display: grid; grid-template-columns: {{ projectsGrid }}; gap: 28px;">
           <sc-for list="{{ otherProjects }}" as="p" hint-placeholder-count="3">
-            <div onClick="{{ openProject }}" data-id="{{ p.id }}" style="cursor: pointer; border-radius: 16px; overflow: hidden; background: linear-gradient(160deg, #1a171e, #100e12); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; box-shadow: 0 24px 48px -18px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.05); transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;" style-hover="border-color: rgba(255,58,88,0.4); transform: translateY(-6px); box-shadow: 0 32px 60px -18px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08);">
+            <div onClick="{{ openProject }}" onMouseEnter="{{ p.hoverOn }}" onMouseLeave="{{ p.hoverOff }}" data-id="{{ p.id }}" style="cursor: pointer; border-radius: 16px; overflow: hidden; background: linear-gradient(160deg, #1a171e, #100e12); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; box-shadow: 0 24px 48px -18px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.05); transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;" style-hover="border-color: rgba(255,58,88,0.4); transform: translateY(-6px); box-shadow: 0 32px 60px -18px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08);">
               <div style="aspect-ratio: 16/10; overflow: hidden; position: relative; background: #1a1720;">
                 <img src="{{ p.cover }}" alt="{{ p.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform var(--hover-speed);" style-hover="transform: scale(var(--hover-scale));">
+                <sc-if value="{{ p.preview }}" hint-placeholder-val="{{ false }}">
+                  <video class="card-preview {{ p.previewOn }}" src="{{ p.preview }}" preload="none" muted loop playsinline aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none;"></video>
+                </sc-if>
+                <sc-if value="{{ p.showYT }}" hint-placeholder-val="{{ false }}">
+                  <div style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: #000;">
+                    <iframe src="{{ p.ytSrc }}" title="{{ p.title }} preview" allow="autoplay; encrypted-media" tabindex="-1" style="position: absolute; left: 50%; top: 50%; width: 140%; height: 140%; transform: translate(-50%, -50%); border: 0; pointer-events: none;"></iframe>
+                  </div>
+                </sc-if>
                 <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(11,10,12,0.92), rgba(11,10,12,0.15) 45%, transparent 70%); pointer-events: none;"></div>
                 <div style="position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06); pointer-events: none;"></div>
                 <span style="position: absolute; left: 18px; bottom: 16px; text-transform: uppercase; letter-spacing: 1.5px; font-size: 11px; font-weight: 700; color: {{ accentColor }}; background: rgba(11,10,12,0.55); backdrop-filter: blur(6px); padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,58,88,0.3);">{{ p.tag }}</span>
@@ -294,11 +328,25 @@
         <p style="text-transform: uppercase; letter-spacing: 1.5px; font-size: 13px; font-weight: 700; color: {{ accentColor }}; margin: 0 0 14px;">{{ activeProject.tag }}</p>
         <h1 style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 6vw, 64px); margin: 0 0 28px; text-transform: none;">{{ activeProject.title }}</h1>
 
+        <sc-if value="{{ activeProject.video }}" hint-placeholder-val="{{ false }}">
+          <div style="aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; margin: 0 0 40px; box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.06);">
+            <iframe src="{{ activeProject.video }}" title="Project demo" style="max-width: 100%; width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ activeProject.localVideo }}" hint-placeholder-val="{{ false }}">
+          <div style="border-radius: 12px; overflow: hidden; margin: 0 0 40px; background: #000; box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.06);">
+            <video ref="{{ autoplayRef }}" src="{{ activeProject.localVideo }}" controls="" muted="" autoPlay="" loop="" playsInline="" preload="auto" poster="{{ activeProject.localVideoPoster }}" style="display: block; width: 100%; height: auto;"></video>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ activeNoVideo }}" hint-placeholder-val="{{ false }}">
         <div style="text-align: center; margin: 0 0 40px;">
           <div style="border-radius: 12px; overflow: hidden; background: rgba(0,0,0,0.3); box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.06); display: inline-block; max-width: 100%; box-sizing: border-box;">
             <img src="{{ activeProject.cover }}" alt="{{ activeProject.title }}" style="max-width: 100%; max-height: 70vh; width: auto; height: auto; object-fit: contain; display: block; box-sizing: border-box;">
           </div>
         </div>
+        </sc-if>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 24px; padding: 24px; border-radius: 14px; background: linear-gradient(160deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 14px 26px -16px rgba(0,0,0,0.5); margin: 0 0 40px;">
           <div>
@@ -377,18 +425,6 @@
           </div>
         </sc-if>
 
-        <sc-if value="{{ activeProject.video }}" hint-placeholder-val="{{ false }}">
-          <div style="aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; margin: 0 0 48px; box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.06);">
-            <iframe src="{{ activeProject.video }}" title="Project demo" style="max-width: 100%; width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
-          </div>
-        </sc-if>
-
-        <sc-if value="{{ activeProject.localVideo }}" hint-placeholder-val="{{ false }}">
-          <div style="border-radius: 12px; overflow: hidden; margin: 0 0 48px; background: #000; box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.06);">
-            <video ref="{{ autoplayRef }}" src="{{ activeProject.localVideo }}" controls="" muted="" autoPlay="" loop="" playsInline="" preload="auto" poster="{{ activeProject.localVideoPoster }}" style="display: block; width: 100%; height: auto;"></video>
-          </div>
-        </sc-if>
-
         <sc-if value="{{ activeProject.learned }}" hint-placeholder-val="{{ false }}">
           <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 16px;">Reflection</h3>
           <p style="font-size: 16px; line-height: 1.85; color: #cfcac4; margin: 0;">{{ activeProject.learned }}</p>
@@ -412,7 +448,7 @@ function hexToRgba(hex, alpha) {
 }
 
 class Component extends DCLogic {
-  state = { activeId: null, showArt: false, artFilter: 'All', lightboxIndex: null, isLoading: true, preloaderOpacity: 1, isMobile: typeof window !== 'undefined' && window.innerWidth <= 820, mobileMenuOpen: false };
+  state = { activeId: null, showArt: false, artFilter: 'All', lightboxIndex: null, isLoading: true, preloaderOpacity: 1, isMobile: typeof window !== 'undefined' && window.innerWidth <= 820, mobileMenuOpen: false, hoverId: null };
 
   projects = [
     {
@@ -537,6 +573,7 @@ class Component extends DCLogic {
         { src: 'images/MirrorsEdge-WallRun.jpg', caption: 'Wall running' },
         { src: 'images/MirrorsEdge-Route.jpg', caption: 'Rooftop route' }
       ],
+      preview: 'images/preview-parkour.mp4',
       localVideo: 'images/MirrorsEdge.mp4', localVideoPoster: 'images/MirrorsEdge-Route.jpg',
       description: "My take on Mirror's Edge movement in Unity, built from scratch in C#. Twelve movement states (running, sliding, rolling, vaulting, wall-running, wall-climbing, ledge hanging, bar swinging, pipe hanging, ziplining, balancing and airborne) run on a strict state machine. Underneath sits a momentum model that rewards keeping your flow and punishes hesitation. On top are Mirror's Edge touches: one button for jump and grab, a 180-degree quick turn, Runner Vision highlighting your next move, and a slow-motion mode. The focus throughout has been architecture that makes moves chain cleanly and makes whole classes of bugs impossible.",
       challenges: [
@@ -570,6 +607,7 @@ class Component extends DCLogic {
         { src: 'images/frame5.jpg', caption: 'Chase camera' },
         { src: 'images/frame6.jpg', caption: 'Trackside spectator camera' }
       ],
+      preview: 'images/preview-racingvr.mp4',
       localVideo: 'images/RacingVR.mp4', localVideoPoster: 'images/poster.jpg',
       description: "RacingVR is a work-in-progress PC VR racing game inspired by the hands-on cockpit of VTOL VR. Nothing is hidden behind menus: you physically grab the wheel, pull the shift paddles and twist the dials inside an F1 cockpit. Under that sits a proper simulation of a 2023-spec F1 car, real circuits generated from OpenStreetMap and elevation data, a racing line the game works out for itself, and engine audio built without a single recorded sample. The goal is multiple cars and racing your friends' lap times. I've been building it for around four months, testing on a Meta Quest 3.",
       challenges: [
@@ -780,11 +818,28 @@ class Component extends DCLogic {
       openArtMobile: (e) => { e.preventDefault(); this.setState({ showArt: true, mobileMenuOpen: false }); window.scrollTo(0, 0); },
       featuredProject: this.projects[0],
       otherProjects: this.projects.slice(1).map(p => {
-        if (!p.wip) return p;
+        const hovered = this.state.hoverId === p.id;
+        const ytId = !p.preview && p.video ? (p.video.split('/embed/')[1] || '').split('?')[0] : '';
+        const extra = {
+          hoverOn: (e) => {
+            this.setState({ hoverId: p.id });
+            const v = e && e.currentTarget && e.currentTarget.querySelector('video');
+            if (v) { v.muted = true; const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); }
+          },
+          hoverOff: (e) => {
+            if (this.state.hoverId === p.id) this.setState({ hoverId: null });
+            const v = e && e.currentTarget && e.currentTarget.querySelector('video');
+            if (v) { v.pause(); try { v.currentTime = 0; } catch (err) {} }
+          },
+          previewOn: hovered ? 'on' : '',
+          showYT: hovered && !isMobile && !!ytId,
+          ytSrc: ytId ? 'https://www.youtube-nocookie.com/embed/' + ytId + '?autoplay=1&mute=1&controls=0&loop=1&playlist=' + ytId + '&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3&disablekb=1' + (p.previewStart ? '&start=' + p.previewStart : '') : ''
+        };
+        if (!p.wip) return Object.assign({}, p, extra);
         const pct = p.id === 'racingvr'
           ? (this.props.racingvrProgress ?? 25)
           : (this.props.parkourProgress ?? 58);
-        return Object.assign({}, p, { cover: this.wipCover(pct) });
+        return Object.assign({}, p, extra, { cover: this.wipCover(pct) });
       }),
       featuredGrid: isMobile ? '1fr' : 'minmax(0, 1.35fr) minmax(0, 1fr)',
       featuredGap: isMobile ? '18px' : '32px',
@@ -824,6 +879,7 @@ class Component extends DCLogic {
       motionSpeed: speedMap[motionIntensity] ?? '0.3s',
       isGridHero: heroStyle === 'grid',
       isScanlineHero: heroStyle === 'scanlines',
+      activeNoVideo: !!(this.projects.find(p => p.id === this.state.activeId)) && !(this.projects.find(p => p.id === this.state.activeId).video || this.projects.find(p => p.id === this.state.activeId).localVideo),
       activeProject: this.projects.find(p => p.id === this.state.activeId) || null,
       openProject: (e) => this.setState({ activeId: e.currentTarget.dataset.id }),
       closeProject: () => this.setState({ activeId: null })
