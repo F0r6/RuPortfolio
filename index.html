@@ -330,7 +330,7 @@
 
         <sc-if value="{{ activeProject.video }}" hint-placeholder-val="{{ false }}">
           <div style="aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; margin: 0 0 40px; box-shadow: 0 24px 48px -20px rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.06);">
-            <iframe src="{{ activeProject.video }}" title="Project demo" style="max-width: 100%; width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
+            <iframe src="{{ activeVideoSrc }}" title="Project demo" style="max-width: 100%; width: 100%; height: 100%; border: none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>
           </div>
         </sc-if>
 
@@ -511,6 +511,7 @@ class Component extends DCLogic {
         { src: 'images/ContraryMotion2.jpg', caption: 'Crane Puzzles' },
         { src: 'images/ContraryMotion1.jpg', caption: 'Rooftops' }
       ],
+      preview: 'images/preview-contrary.mp4',
       video: 'https://www.youtube.com/embed/tt_TT9gtyAE',
       learned: "Working in a team of 8 was the biggest step up for me on this project. It meant actually communicating properly and splitting work up so nobody was left blocked or stepping on someone else's changes. Running the Perforce repo put me right in the middle of that, and sorting out merge conflicts under pressure taught me more about source control than any solo project ever could. The other thing that caught me off guard was how much QA testing mattered. Structured playtests kept turning up problems I'd never have spotted myself, and acting on that feedback changed how a few of the mechanics ended up working in the final build."
     },
@@ -534,6 +535,7 @@ class Component extends DCLogic {
         { num: 5, title: "Debug Visualisation", text: "Built a toggleable debug view that draws every trace, wrap point and edge-tangent arrow live, which made the corner and sliding logic possible to tune." },
         { num: 6, title: "Blending States", text: "Used timelines for boost fade-in and fade-out, swing fade-in and rotation blending, so moving between running, swinging and boosting never snaps." }
       ],
+      preview: 'images/preview-aot.mp4',
       video: 'https://www.youtube.com/embed/GV4t41YszEE',
       learned: "The pendulum and boosting mechanics gave me the most trouble on this project. Getting the swing to feel physically grounded while still being fun to control took a lot of research, and it was only after working through a fair few tutorials that it finally clicked. What really stuck with me is how much of the feel came down to the camera rather than the underlying physics. The pendulum and boost logic were technically working long before the mechanic actually felt good, and it wasn't until I tuned the FOV, player angle and spring arm that swinging and boosting went from functional to genuinely satisfying."
     },
@@ -560,6 +562,7 @@ class Component extends DCLogic {
         { num: 5, title: 'Reactive SFX Mixing', text: "Synced gunshots to fire in time with the music, and balanced collision, damage and low-health cues against the shifting music so the mix still read clearly once things got hectic." },
         { num: 6, title: 'Playtesting the Mix', text: "Ran repeated playtests, adjusting timing and levels across the different states until the audio consistently reinforced what was happening on screen." }
       ],
+      preview: 'images/preview-asteroids.mp4',
       video: 'https://www.youtube.com/embed/vK9gOUUwzKw',
       learned: "This project changed how I think about audio in games. Going in, I treated sound as something you bolt on once the gameplay works, but building everything around Wwise events, switches and states forced me to think about audio as a system in its own right, not an afterthought. Building the adaptive layers themselves was probably the most rewarding part. Watching the music actually shift as an asteroid got closer, or escalate as danger built up, rather than just looping the same track, is what made the whole thing feel alive instead of static. Getting the gunshot to land in time with the music was a small detail that taught me a lot about how much timing matters. It sounds like a minor thing, but nailing it made the whole game feel far more intentional than it had any right to. Connecting Wwise into the game through C++ was also new ground for me, and getting comfortable enough with that pipeline to have SFML and Wwise talking to each other reliably gave me a much better understanding of how audio middleware fits into a real production setup. Adaptive audio is a subject I want to keep exploring well beyond this project."
     },
@@ -880,6 +883,7 @@ class Component extends DCLogic {
       isGridHero: heroStyle === 'grid',
       isScanlineHero: heroStyle === 'scanlines',
       activeNoVideo: !!(this.projects.find(p => p.id === this.state.activeId)) && !(this.projects.find(p => p.id === this.state.activeId).video || this.projects.find(p => p.id === this.state.activeId).localVideo),
+      activeVideoSrc: (() => { const ap = this.projects.find(p => p.id === this.state.activeId); if (!ap || !ap.video) return ''; return ap.video + (ap.video.indexOf('?') >= 0 ? '&' : '?') + 'autoplay=1&mute=1&playsinline=1&rel=0'; })(),
       activeProject: this.projects.find(p => p.id === this.state.activeId) || null,
       openProject: (e) => this.setState({ activeId: e.currentTarget.dataset.id }),
       closeProject: () => this.setState({ activeId: null })
