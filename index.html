@@ -17,6 +17,9 @@
 <style>
   @keyframes artFadeIn { from { opacity: 0; transform: translateY(16px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
   @keyframes preloaderSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  @keyframes moodCycle { 0% { opacity: 0; } 4% { opacity: 1; } 33% { opacity: 1; } 37% { opacity: 0; } 100% { opacity: 0; } }
+  .mood-layer { opacity: 0; animation: moodCycle 12s infinite; }
+  @media (prefers-reduced-motion: reduce) { .mood-layer { animation: none; } .mood-layer.mood-first { opacity: 1; } }
   body { margin: 0; background: #0a0a0a; }
   a { color: var(--accent-color, #ff3a58); }
   a:hover { color: #ff6b81; }
@@ -172,8 +175,45 @@
           <h2 style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 6vw, 44px); margin: 0 0 14px; text-transform: none;">My Projects<span style="color: {{ accentColor }};">.</span></h2>
           <p style="font-size: 15px; color: #a49f98; margin: 0;">Here's a showcase of some of my favourite projects. More to come...</p>
         </div>
+        <div onClick="{{ openProject }}" data-id="{{ featuredProject.id }}" style="cursor: pointer; position: relative; margin: 0 0 32px; border-radius: 20px; overflow: hidden; background: radial-gradient(120% 140% at 100% 100%, rgba(189,0,44,0.2), transparent 55%), linear-gradient(160deg, #1f1a22, #110e13); border: 1px solid rgba(255,58,88,0.45); box-shadow: 0 0 0 1px rgba(255,58,88,0.12), 0 30px 70px -24px rgba(189,0,44,0.55), 0 24px 48px -18px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.07); transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;" style-hover="transform: translateY(-6px); border-color: rgba(255,58,88,0.75); box-shadow: 0 0 0 1px rgba(255,58,88,0.25), 0 40px 90px -24px rgba(189,0,44,0.75), 0 32px 60px -18px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.09);">
+          <div style="position: relative; overflow: hidden; aspect-ratio: {{ featuredAspect }}; background: #1a1720;">
+            <img src="images/honsSun.png" alt="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+            <sc-for list="{{ featuredMoods }}" as="m" hint-placeholder-count="3">
+              <div class="mood-layer {{ m.cls }}" style="position: absolute; inset: 0; animation-delay: {{ m.delay }};">
+                <img src="{{ m.src }}" alt="{{ m.alt }}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                <span style="position: absolute; right: 16px; bottom: 14px; font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: #fff; background: rgba(11,10,12,0.6); backdrop-filter: blur(6px); padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.2);">{{ m.label }}</span>
+              </div>
+            </sc-for>
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(17,14,19,0.55), transparent 22%); pointer-events: none;"></div>
+            <span style="position: absolute; left: 18px; top: 18px; display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: #fff; background: linear-gradient(180deg, #d81440, #a8001f); padding: 8px 14px; border-radius: 999px; box-shadow: 0 8px 20px -6px rgba(216,20,64,0.7), inset 0 1px 0 rgba(255,255,255,0.25);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+              {{ featuredAwardBadge }}
+            </span>
+          </div>
+          <div style="display: grid; grid-template-columns: {{ featuredGrid }}; gap: {{ featuredGap }}; padding: {{ featuredPad }}; align-items: start;">
+            <div>
+              <p style="font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: {{ accentColor }}; margin: 0 0 8px;">Featured · Honours Project</p>
+              <h3 style="font-family: 'Bebas Neue', sans-serif; font-size: clamp(34px, 4.2vw, 50px); line-height: 0.95; font-weight: 400; margin: 0 0 12px; color: #f7f4f1;">{{ featuredProject.title }}</h3>
+              <p style="font-size: 15.5px; line-height: 1.65; color: #b9b4ad; margin: 0 0 16px;">{{ featuredProject.blurb }}</p>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px;">
+                <sc-for list="{{ featuredProject.chips }}" as="c" hint-placeholder-count="4">
+                  <span style="font-size: 12px; font-weight: 600; color: #e7e3de; padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);">{{ c }}</span>
+                </sc-for>
+              </div>
+              <span style="display: inline-block; font-size: 13.5px; font-weight: 700; color: #fff; background: linear-gradient(180deg, #d81440, #a8001f); padding: 11px 20px; border-radius: 999px; box-shadow: 0 10px 24px -8px rgba(216,20,64,0.6), inset 0 1px 0 rgba(255,255,255,0.2);">Read case study →</span>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{ featuredProject.awards }}" as="aw" hint-placeholder-count="2">
+                <div style="display: flex; align-items: flex-start; gap: 12px; padding: 13px 16px; border-radius: 12px; background: rgba(255,58,88,0.08); border: 1px solid rgba(255,58,88,0.28);">
+                  <span style="font-size: 18px; line-height: 1.3;" aria-hidden="true">🏆</span>
+                  <span style="font-size: 13.5px; line-height: 1.45; color: #f2efec;"><strong>{{ aw.name }}</strong><br><span style="color: #a49f98; font-size: 12.5px;">{{ aw.detail }}</span></span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
         <div style="display: grid; grid-template-columns: {{ projectsGrid }}; gap: 28px;">
-          <sc-for list="{{ projects }}" as="p" hint-placeholder-count="3">
+          <sc-for list="{{ otherProjects }}" as="p" hint-placeholder-count="3">
             <div onClick="{{ openProject }}" data-id="{{ p.id }}" style="cursor: pointer; border-radius: 16px; overflow: hidden; background: linear-gradient(160deg, #1a171e, #100e12); border: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; box-shadow: 0 24px 48px -18px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.05); transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;" style-hover="border-color: rgba(255,58,88,0.4); transform: translateY(-6px); box-shadow: 0 32px 60px -18px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.08);">
               <div style="aspect-ratio: 16/10; overflow: hidden; position: relative; background: #1a1720;">
                 <img src="{{ p.cover }}" alt="{{ p.title }}" style="width: 100%; height: 100%; object-fit: cover; transition: transform var(--hover-speed);" style-hover="transform: scale(var(--hover-scale));">
@@ -279,6 +319,21 @@
 
         <p style="font-size: 17px; line-height: 1.85; color: #cfcac4; margin: 0 0 40px;">{{ activeProject.description }}</p>
 
+        <sc-if value="{{ activeProject.challenges }}" hint-placeholder-val="{{ false }}">
+          <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 20px;">Key Challenges</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 18px; margin: 0 0 48px;">
+            <sc-for list="{{ activeProject.challenges }}" as="ch" hint-placeholder-count="3">
+              <div style="padding: 20px 22px; border-radius: 12px; border-top: 2px solid rgba(255,58,88,0.45); background: linear-gradient(160deg, rgba(255,255,255,0.045), rgba(255,255,255,0.008)); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 14px 26px -16px rgba(0,0,0,0.55);">
+                <h4 style="font-size: 16.5px; font-weight: 700; margin: 0 0 14px; color: #f2efec;">{{ ch.title }}</h4>
+                <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: {{ accentColor }}; margin: 0 0 4px;">The problem</p>
+                <p style="font-size: 14.5px; line-height: 1.7; color: #b3aea7; margin: 0 0 14px;">{{ ch.problem }}</p>
+                <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: {{ accentColor }}; margin: 0 0 4px;">How I solved it</p>
+                <p style="font-size: 14.5px; line-height: 1.7; color: #b3aea7; margin: 0;">{{ ch.solution }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
         <sc-if value="{{ activeProject.process }}" hint-placeholder-val="{{ false }}">
           <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 20px;">Process</h3>
           <div style="display: flex; flex-direction: column; gap: 0; margin: 0 0 48px;">
@@ -362,33 +417,49 @@ class Component extends DCLogic {
   projects = [
     {
       id: 'hons', tag: 'Unreal Engine · University · Honours Project', title: 'Emotion-Based Gaming',
-      blurb: 'An emotion tracker that adapts a game environment in real time to how the player is feeling.',
-      cover: 'images/HonsMain.png', role: 'Solo Developer', tools: 'Unreal Engine, Python, OpenCV, MediaPipe',
-      description: "For my honours project I wanted to see how much a game world could react to how the player actually feels, not just what they press. You walk through a forest and your own face drives the changes. Smile and hold it, and everything turns vibrant and alive; look sad, and the sky darkens, rain starts, and the music dips into something melancholic. The tracking itself runs outside Unreal, in a facial tracker I built in Python with OpenCV and MediaPipe. It calibrates to your neutral expression first, then reads facial landmarks through the Facial Action Coding System (FACS) to work out what you're feeling. It picked up the Technical Innovation Award at Abertay's 2026 Digital Graduate Showcase, which I was pretty chuffed about.",
+      blurb: "A forest that reads your face through a webcam, recognising six emotions from 13 facial muscle movements and turning them into weather, light and music. Winner of two awards for innovation at Abertay.",
+      cover: 'images/HonsMain.png', chips: ['Python', 'MediaPipe', 'FACS', 'OSC', 'Unreal Engine 5.6'],
+      awards: [
+        { name: 'Technical Innovation Award', detail: 'Abertay Digital Graduate Show 2026 · sponsored by Pocket Sized Hands · one award across a faculty of 180+ students' },
+        { name: 'Honorary Fellows Prize for Innovation', detail: 'Abertay University · awarded to the project judged most innovative' }
+      ], role: 'Solo Developer', tools: "Unreal Engine 5.6, Python, OpenCV, MediaPipe Face Mesh, OSC",
+      description: "For my honours project I made the player's face the controller. You walk through a forest while a webcam watches you: smile and the world warms and blooms, look sad and the rain sets in, get angry and the air fills with ash. Getting there meant building my own emotion tracker in Python rather than using an off-the-shelf classifier. It maps your face with MediaPipe's 468-point face mesh, measures 13 facial muscle movements defined by the Facial Action Coding System (FACS) against your own calibrated neutral face, and scores six emotions (happy, sad, surprised, fear, angry and disgust) with rules I built from FACS and tuned through testing. It streams the results into Unreal over OSC ten times a second, where data-driven Blueprints turn each emotion's confidence into weather, sky, particles and music. The project won two awards: the Technical Innovation Award at Abertay's 2026 Digital Graduate Show, sponsored by Pocket Sized Hands, and Abertay University's Honorary Fellows Prize for Innovation, awarded to the project judged most innovative.",
+      challenges: [
+        { title: "Turning a face mesh into muscle movements", problem: "A face mesh gives you hundreds of moving points, but points aren't emotions. Feeding them straight into rules would be fragile and impossible to reason about.", solution: "Translated the mesh into 13 FACS Action Units, the standard building blocks of facial expression. Each one is measured from specific landmarks. Inner brow raiser (AU1) tracks how far the inner brows rise, nose wrinkler (AU9) tracks the bridge of the nose, and jaw drop (AU26) tracks the gap between the lips. Each unit has its own sensitivity gain and is clamped to 0–1, so every emotion rule works on the same scale." },
+        { title: "Leaning in shouldn't look like surprise", problem: "Raw landmark positions change whenever the player moves their head or leans towards the camera, and everyone's resting face is different. Without correcting for that, a tracker mistakes distance for expression and a resting face for a frown.", solution: "The tracker spends its first 60 frames building a running average of your neutral face. Every frame after that is measured relative to the tip of the nose and rescaled by the distance between the eyes, so moving closer or further away cancels out and only real changes from your own baseline count. Pressing R recalibrates at any time." },
+        { title: "A smile has to mean it", problem: "A simple rule like 'the mouth widened, so they're happy' fires on polite smiles, talking and yawns, and expressions that sit between two emotions make the world flip back and forth.", solution: "Each emotion is scored from its FACS combination. Happy needs both the cheek raiser (AU6) and the lip corner puller (AU12), the pairing that marks a genuine Duchenne smile rather than a polite one. Anger is built from the brow lowerer, lid tightener and lip tightener. If the best score is under 0.3, or the top two emotions are within 0.05 of each other, the tracker says 'neutral' rather than guessing." },
+        { title: "Steady, not twitchy", problem: "Webcam landmarks jitter from frame to frame, and an expression that flickers for a single frame would make the forest lurch between weather states.", solution: "Smoothing happens at two levels. Landmarks are averaged over the last 5 frames before any Action Units are measured. Then each emotion's confidence works like a leaky bucket: every frame it decays by 12%, and the detected emotion gains 0.25. A held expression fills its bar in about six frames, a one-frame twitch never gets anywhere, and the forest only commits to emotions you actually hold." },
+        { title: "Getting it into Unreal", problem: "The tracker runs as its own Python program, so Unreal needed a steady, lightweight feed it could react to without being flooded with data.", solution: "The tracker sends OSC messages over UDP to a receiver Blueprint in Unreal, throttled to 10 Hz. Each update carries the dominant expression, all six confidence values, all 13 Action Units and the head pose. In Unreal, each emotion's responses are defined as data in their own structs for weather, audio, particles and sample sets, so tuning how the forest reacts never means rewiring logic." }
+      ],
       gallery: [
+        { src: 'images/honsTracker.jpg', caption: 'The face tracker live: MediaPipe face mesh with per-emotion confidence bars and head pose (pitch, yaw, roll)' },
         { src: 'images/honsSun.png', caption: 'Happy — vibrant, sunlit changes' },
         { src: 'images/honsAsh.png', caption: 'Angry — ash and haze' },
         { src: 'images/honsRain.png', caption: 'Sad — rain and dimmed light' }
       ],
       process: [
-        { num: 1, title: 'Initial Prototype with Haar Cascades', text: 'I began working directly in Unreal, using OpenCV with Haar Cascade classifiers to test whether basic expressions (happy, sad, surprised and angry) could be detected at all.' },
-        { num: 2, title: 'Switching to MediaPipe and Python', text: 'Haar Cascades were too imprecise and slow for the responsiveness I needed, so I moved the tracking into a separate Python application built on MediaPipe, which gave a significant improvement in accuracy.' },
-        { num: 3, title: 'Proving the Concept', text: 'Before building anything more complex, I connected the Python tracker to Unreal and mapped a few basic environmental changes to each expression, to confirm the pipeline worked end to end.' },
-        { num: 4, title: 'Scaling Up with Ultra Dynamic Sky and Brushify', text: 'Once the basic pipeline was working, I introduced Ultra Dynamic Sky and Brushify so the environment could respond with full weather and landscape changes rather than minor tweaks.' },
-        { num: 5, title: 'Building the Forest Levels', text: 'I blocked out rough forest levels to give the emotion-driven changes a proper environment to play out in.' },
-        { num: 6, title: 'Averaging the Emotion Readings', text: 'The initial detection switched between states too quickly, so I added averaging over time to smooth this out and make the response feel stable rather than reactive to every small change.' },
-        { num: 7, title: 'Expanding the Range of Responses', text: 'I then added a wider range of responses per emotion, including calmer weather, ambient audio and particle effects, building up to more intense weather at stronger emotional states.' },
-        { num: 8, title: 'Refining the Result', text: 'In the final stage I focused on tuning timing and thresholds across each emotional state until the changes felt deliberate and well judged.' }
+        { num: 1, title: "Haar Cascade Prototype", text: "Started inside Unreal using OpenCV Haar Cascades to see whether basic expressions could be told apart at all. It worked just enough to prove the idea, but it was too slow and imprecise to feel responsive." },
+        { num: 2, title: "Rebuilding on MediaPipe", text: "Moved tracking out into a standalone Python application built on MediaPipe Face Mesh, tracking a single face with refined landmarks around the eyes and lips. That gave a dense, stable mesh to build Action Units from." },
+        { num: 3, title: "Head Pose Estimation", text: "Added head pose tracking by matching six landmarks (eye corners, nose tip, mouth corners and chin) to a 3D face model with OpenCV's solvePnP. That gives pitch, yaw and roll, which are smoothed and streamed to Unreal alongside the emotions." },
+        { num: 4, title: "Proving the Loop", text: "Connected the tracker to Unreal over OSC and mapped a few simple environment changes to each emotion, to prove the whole pipeline from webcam to world before building anything big." },
+        { num: 5, title: "Building the World's Responses", text: "Built the forest levels and data-driven responses for each emotion: Ultra Dynamic Sky for weather and lighting, Brushify for the landscape, a music manager, particle effects and emotion-tinted materials, escalating from calm ambience to full storms as confidence rises." },
+        { num: 6, title: "Tuning with Data", text: "Every update is also written to a timestamped CSV log of the expression and all six confidences, which made it possible to review sessions and tune thresholds and sensitivities from evidence rather than by feel." },
+        { num: 7, title: "What I'd Improve", text: "Thresholds still need tuning to work well across more faces. The brow lowerer (AU4) struggles with asymmetric eyebrows, and dim lighting, glasses and dense beards can all throw off detection. These are the next things I'd tackle." }
       ],
       video: 'https://www.youtube.com/embed/PAqoWQJIaGg',
       learned: "This was the first project where I owned everything end to end, from the research through to the final build, and that changed how I worked. I had to start learning a bit of Python to build the tracker, a language I'd barely touched before this, and picking up enough of it to build something real was its own learning curve on top of everything else. Jumping between Python and Unreal meant I also had to get comfortable with a pipeline that wasn't just one engine talking to itself, and figuring out how to keep that connection reliable taught me a lot about working across tools rather than staying inside one. The averaging problem was the one that really stuck with me. The first version reacted to everything instantly, which sounds good on paper but just felt chaotic in practice, and it took a few passes to understand that smoothing the data over time was what actually made it feel like the game understood you. I came out of it with a much better sense of how technical decisions like that directly shape whether an experience feels intentional or just gimmicky."
     },
     {
       id: 'contrary-motion', tag: 'Unreal Engine · University · Hellcat Games', title: 'Contrary Motion',
-      blurb: "A funky co-op puzzle shooter built with a team of 8 under industry mentorship at 4J Studios.",
+      blurb: "A co-op puzzle shooter where one player pushes, the other pulls, and enemies, explosive barrels and each other all become things to throw. Built by a team of 8 under mentorship from 4J Studios.",
       cover: 'images/ContraryMotion.png', role: 'Gameplay Programmer', tools: 'Unreal Engine, Perforce',
       link: 'https://hellcatgames.itch.io/contrary-motion', linkLabel: 'hellcatgames.itch.io',
       description: 'Contrary Motion is a funky, stylised co-op puzzle shooter developed by a team of 8 at Abertay University, mentored by industry professionals at 4J Studios. Playing as "funky bandits," two players cooperate to fight through hordes of enemies and solve physics-based puzzles for score. Each player wields a push or pull ability, picking up and throwing objects, enemies, or each other, building a mechanic entirely around player synergy.',
+      challenges: [
+        { title: "One mechanic that works everywhere", problem: "Push and pull had to act on players, enemies and objects alike. If it behaved differently in a fight than in a puzzle, the core idea of the game fell apart.", solution: "Built the push and pull abilities as one physics system, then extended that same system to explosive barrels and electrical traps, so everything responds consistently whether you meet it mid-combat or mid-puzzle." },
+        { title: "Eight people, one project", problem: "With eight developers working in the same project, people overwriting each other's work was a real risk from day one.", solution: "Set up and ran the team's Perforce repository early, established the workflow everyone followed, and sorted out merge conflicts under deadline pressure." },
+        { title: "Letting players have the final say", problem: "Some mechanics that felt right to us didn't land with people who hadn't built them.", solution: "Ran structured playtests and used the feedback to rework several mechanics before the final build." }
+      ],
       process: [
         { num: 1, title: 'Team Formation and Concept', text: 'Formed a team of 8 at Abertay University under mentorship from 4J Studios. We were given the prompt "attract and repel" and developed that into the "funky bandits" co-op concept, with two players working together through combat and physics puzzles.' },
         { num: 2, title: 'Setting Up Source Control', text: 'Set up and configured the team\'s Perforce repository early on, establishing a workflow for 8 people to work on the project without overwriting each other\'s progress.' },
@@ -409,25 +480,30 @@ class Component extends DCLogic {
     },
     {
       id: 'aot', tag: 'Unreal Engine · University · Systems Project', title: 'Attack on Titan — Grappling System',
-      blurb: 'A physics-based twin-rope grappling and swinging mechanic inspired by Attack on Titan.',
-      cover: 'images/grapple.png', role: 'Solo Developer', tools: 'Unreal Engine',
-      description: 'This project focused on building a realistic Attack on Titan-style grappling mechanic in Unreal Engine, using twin directional ropes and a physics-based swinging system. It dove deep into how boosting and swinging around a map can be made to feel responsive while staying grounded in believable physics.',
+      blurb: "Twin-hook grappling written in native Unreal C++: ropes that wrap around corners and slide along edges, and a swing force that behaves like a real rope.",
+      cover: 'images/grapple.png', role: 'Solo Developer', tools: "Unreal Engine 5.4, C++",
+      description: "An Attack on Titan-style grappling system written in about 2,400 lines of native Unreal Engine C++ across three classes: the player, the grapple projectile and the cable. Two independent hooks fire from the hips at 250 m/s. Each rope wraps around corners and unwraps as you swing back, slides along edges instead of snagging, and pulls only when it's taut, like a real rope. A boost reels you towards your anchor, and a speed-driven camera sells the motion. The challenge was keeping it physically believable while still being responsive enough to throw yourself around a city.",
+      challenges: [
+        { title: "Ropes that wrap around corners", problem: "A straight line from player to anchor passes straight through buildings the moment you swing round a corner.", solution: "Every tick, a line trace runs from the hip socket towards the current anchor on a custom Grapple collision channel. If something blocks it, a second trace runs back from the anchor. The two hit normals describe the corner. The new wrap point sits on the impact point, pushed off the surface along their average, and their cross product gives the direction of the edge. Points, normals and edge tangents go on a per-hook stack, and a delegate tells the projectile to spawn another cable segment." },
+        { title: "Unwrapping and sliding along edges", problem: "Wrap points are only half the problem. The rope has to unwrap when you swing back, and a wrap point frozen where the rope first touched looks wrong the moment you move along a wall.", solution: "Each tick also traces from the hip to the second-to-last point. If that line is clear, the newest wrap point and its cable segment are popped off the stack. To slide, I find the nearest points between the hip-to-anchor segment and the stored edge line, then sphere-trace across the edge to reseat the wrap point on it. The rope glides along edges as you swing rather than sticking where it first caught." },
+        { title: "A swing that behaves like a rope", problem: "A rope can only pull, never push. Applying a constant force towards the anchor feels like a spring, and an unclamped swing quickly spirals out of control.", solution: "The swing force takes the player's velocity (clamped between 4 and about 20 m/s), finds its component along the rope, then reverses and doubles it. That cancels any outward motion, keeping the player on the arc. It's scaled from 75% to 100% by how far below the anchor you are, and it only applies when it points towards the anchor, so a slack rope does nothing and the swing stays grounded in the lower half of the arc." },
+        { title: "A boost that reels you in", problem: "Boosting needed to feel explosive at the start and keep pulling across long distances without launching the player into orbit.", solution: "Starting a boost applies an instant impulse towards the anchor, then a continuous force that grows with distance (mapped over 0 to 40 m) plus a constant upward lift. Ground friction drops while boosting, and velocity is capped at 32.5 m/s. With both hooks attached, everything targets the midpoint between them." },
+        { title: "Feel lives in the camera and body", problem: "The maths was working long before it felt good. Swinging at speed read as floaty and slow on screen.", solution: "FOV widens from 90 to 100 degrees and the spring arm extends from 4 to 10 m as speed rises, both smoothly interpolated. The body's yaw blends your direction of travel with the direction to the anchor, and banks into the swing by up to 35 degrees, or 75 degrees while boosting." }
+      ],
       process: [
-        { num: 1, title: 'Basic Grapple Prototype', text: 'Started with a simple projectile that could be fired and would stick to a wall on hit, to prove the core grappling concept.' },
-        { num: 2, title: 'Cable Visuals', text: "Added a cylinder mesh running from the player's hip to the projectile's location, giving the grapple a visible rope rather than an invisible attach point." },
-        { num: 3, title: 'Retract and Release', text: 'Added a release mechanism to retract the projectile, applying a cable component so it visually reeled back in on release.' },
-        { num: 4, title: 'Dual-Hook Input', text: 'Duplicated the shoot and retract logic across the left and right mouse buttons, so each side of the hip could fire and manage its own independent grapple.' },
-        { num: 5, title: 'Cables That Bend Around Corners', text: "Had each cable segment raycast back towards the player to check for obstructions. If something blocked line of sight, a new cylinder segment was spawned with its own raycast and end point, chaining segments so the cable visually bent around corners instead of clipping through geometry." },
-        { num: 6, title: 'Pendulum Swing Physics', text: "Built the swinging using pendulum calculations, only computing the lower half of the vertical circular momentum to keep the motion grounded and controllable." },
-        { num: 7, title: 'Boost Mechanic', text: 'Added a boost that checks if the player is currently grappling, then applies force in the direction of travel towards the hook or hooks, tightening the cables based on distance to the hook and whether boosting.' },
-        { num: 8, title: 'Tuning the Camera Feel', text: "Instead of reaching for VFX, I focused this section on the camera itself, adjusting FOV, player angle and the spring arm until the swinging and boosting actually felt good to control." }
+        { num: 1, title: "Blueprint to Native C++", text: "Prototyped the mechanic in Blueprint, then rebuilt it as native C++ classes for the player, projectile and cable, with Blueprint subclasses kept on top for tuning in the editor." },
+        { num: 2, title: "The Projectile", text: "Each hook is a 5 cm collision sphere on a custom Grapple channel, fired with projectile movement at 250 m/s and gravity disabled. If it hasn't hit anything after 0.4 seconds it returns automatically, reeling back to the player along a curve-driven timeline." },
+        { num: 3, title: "Two Independent Hooks", text: "Left and right hooks fire from their own leg sockets, and each keeps its own stacks of wrap points, normals and edge tangents. Delegates and events keep the player, projectile and cable classes decoupled." },
+        { num: 4, title: "Rendering the Cable", text: "Each rope segment is its own actor whose mesh is stretched and rotated between consecutive points every tick, so a wrapped rope is drawn as a chain of straight segments that matches the physics exactly." },
+        { num: 5, title: "Debug Visualisation", text: "Built a toggleable debug view that draws every trace, wrap point and edge-tangent arrow live, which made the corner and sliding logic possible to tune." },
+        { num: 6, title: "Blending States", text: "Used timelines for boost fade-in and fade-out, swing fade-in and rotation blending, so moving between running, swinging and boosting never snaps." }
       ],
       video: 'https://www.youtube.com/embed/GV4t41YszEE',
       learned: "The pendulum and boosting mechanics gave me the most trouble on this project. Getting the swing to feel physically grounded while still being fun to control took a lot of research, and it was only after working through a fair few tutorials that it finally clicked. What really stuck with me is how much of the feel came down to the camera rather than the underlying physics. The pendulum and boost logic were technically working long before the mechanic actually felt good, and it wasn't until I tuned the FOV, player angle and spring arm that swinging and boosting went from functional to genuinely satisfying."
     },
     {
       id: 'asteroids-audio', tag: 'SFML · University · Audio Programming', title: 'Asteroids Audio Project',
-      blurb: 'A recreation of the classic Asteroids with fully adaptive, gameplay-driven audio.',
+      blurb: "Asteroids rebuilt from scratch in SFML, with music that escalates as rocks close in and gunshots that land in time with the beat.",
       cover: 'images/AsteroidsAudioCover.png',
       role: 'Solo Developer', tools: 'SFML, Wwise, Caustic',
       gallery: [
@@ -435,6 +511,11 @@ class Component extends DCLogic {
         { src: 'images/AsteroidsGameplay2.png', caption: 'Wave 2' }
       ],
       description: "This was an audio programming module project in my 4th year, built around a from-scratch recreation of Asteroids in SFML. Rather than treating audio as an afterthought, the goal was to make sound and music respond directly to what's happening in the game: proximity to asteroids, shooting, taking damage, low health, new levels, menu interactions, and filtering across the menu, gameplay and pause states. I built the sound assets in Caustic and connected everything through Wwise so the mix reacts live to gameplay state rather than just playing fixed one-shot clips.",
+      challenges: [
+        { title: "Music that knows you're in danger", problem: "A single looping track can't tell you an asteroid is about to hit you.", solution: "Composed music stems in Caustic built for vertical and horizontal layering, then used Wwise to bring layers in and out based on how close the asteroids are, so the music escalates as danger builds." },
+        { title: "Gunshots on the beat", problem: "Sound effects firing whenever they're triggered clashed with the music and made the game feel loose.", solution: "Synced the gunshots to land in time with the music, then balanced collision, damage and low-health cues against the shifting mix so it still reads clearly when things get hectic." },
+        { title: "Middleware in a from-scratch engine", problem: "Wwise expects an engine to talk to it, and SFML doesn't come with that built in.", solution: "Wrote the C++ that routes gameplay actions like firing and collisions into Wwise as events, switches, triggers and states, including filtering across the menu, gameplay and pause states." }
+      ],
       process: [
         { num: 1, title: 'Recreating Asteroids in SFML', text: "Built the core Asteroids gameplay loop from scratch in SFML: ship movement, shooting, asteroid splitting and collision, to give the audio system something real to respond to." },
         { num: 2, title: 'Sound Design in Caustic', text: "Composed and produced the sound effects and music stems in Caustic, building them for both vertical and horizontal layering rather than single static tracks." },
@@ -448,28 +529,37 @@ class Component extends DCLogic {
     },
     {
       id: 'parkour', tag: 'Unity · Systems Project · Work In Progress', title: "Mirror's Edge Inspired Parkour System",
-      blurb: "A Mirror's Edge-inspired parkour system built in Unity, with plans to keep expanding it.",
+      blurb: "Mirror's Edge-style movement built on a 12-state machine and a momentum model that rewards flow, with vaults, wall-runs, ledge hangs, ziplines and Runner Vision.",
       wip: true, cover: 'images/ME-Header-3a.jpg',
-      role: 'Solo Developer', tools: 'Unity, C#',
+      role: 'Solo Developer', tools: "Unity, C#, CharacterController, Input System, URP",
       gallery: [
         { src: 'images/MirrorsEdge-Vault.jpg', caption: 'Approaching a vault obstacle' },
         { src: 'images/MirrorsEdge-WallRun.jpg', caption: 'Wall running' },
         { src: 'images/MirrorsEdge-Route.jpg', caption: 'Rooftop route' }
       ],
       localVideo: 'images/MirrorsEdge.mp4', localVideoPoster: 'images/MirrorsEdge-Route.jpg',
-      description: "This project is my take on Mirror's Edge-style movement in Unity: fluid vaulting, wall-running and momentum-driven traversal across rooftops. The focus has been on making movement read clearly and chain smoothly from one action into the next, rather than treating each parkour move as an isolated animation. It's an ongoing system I plan to keep expanding with more traversal moves and tighter movement feel.",
+      description: "My take on Mirror's Edge movement in Unity, built from scratch in C#. Twelve movement states (running, sliding, rolling, vaulting, wall-running, wall-climbing, ledge hanging, bar swinging, pipe hanging, ziplining, balancing and airborne) run on a strict state machine. Underneath sits a momentum model that rewards keeping your flow and punishes hesitation. On top are Mirror's Edge touches: one button for jump and grab, a 180-degree quick turn, Runner Vision highlighting your next move, and a slow-motion mode. The focus throughout has been architecture that makes moves chain cleanly and makes whole classes of bugs impossible.",
+      challenges: [
+        { title: "One state at a time, no boolean soup", problem: "With a dozen movement abilities, flags like isWallRunning and isVaulting quickly start contradicting each other, and moves fight over the player's velocity.", solution: "Each move is its own serializable state class, and a single PlayerController is the only arbiter. Exactly one state is active, only that state may write velocity or the camera, and transitions go through one call that exits the old state and enters the new one. Adding a mechanic means one class, one enum value and one line in the registry. Every state's tuning appears as a foldout in a single Inspector." },
+        { title: "Momentum that rewards flow", problem: "Mirror's Edge feels great because speed is earned and kept. A naive controller either snaps to top speed or bleeds it every time you do something interesting.", solution: "A dedicated momentum model builds speed at 18 units/s through walk, run and max tiers (7, 12 and 22), auto-sprints above 11, and decays when you hesitate. Turns under 30 degrees are free, and sharper ones cost up to 35% of your speed at 140 degrees. Landings keep 95% of your speed, and a well-timed roll keeps all of it. No move is ever allowed to set speed downwards. One bug made that rule concrete: a ledge back-jump launched at about 15 units/s still reported about 3, so a chained wall-run refused to start. The fix was to sync speed upwards after every launch." },
+        { title: "Vaults that read the obstacle", problem: "Vaults need to handle rails, low walls and high ledges, from any angle and any speed, without clipping through geometry or killing momentum.", solution: "Three tiers. Speed vaults keep full momentum and probe for ground beyond the obstacle to extend the arc onto it, and pressing jump in the second half turns the vault into a kong launch. Mid vaults plant the hands, and high vaults pull up from a ledge. Vault direction blends your approach with the obstacle's face so glancing approaches straighten out, durations scale with entry speed, and every path is checked against the capsule before it starts. Moves bail out if the capsule gets pushed off course." },
+        { title: "Camera bugs made impossible", problem: "When states rotate the camera directly, a tilt from a wall-run can leak into the next move and stay stuck.", solution: "States never touch the camera transform. They write to effect channels (pitch, roll, position, FOV and shake), which one camera component smooths and composes each frame. Every channel is cleared on every state transition, so a leaked tilt is architecturally impossible. Slow motion uses its own separate channel, so it survives across moves." },
+        { title: "Runner Vision without touching materials", problem: "Tinting objects red by editing materials either creates a new material instance per object or permanently tints every object that shares that material.", solution: "Runner Vision uses MaterialPropertyBlocks, so no material is ever duplicated or modified. It detects per renderer whether the shader uses _Color (Built-in) or _BaseColor (URP and HDRP), so it works on any render pipeline, and it avoids emission because property blocks can't toggle shader keywords. A route-ahead mode scores candidates by distance and how directly you're looking at them, then lights up only the next few moves, the way Mirror's Edge points you along a route." }
+      ],
       process: [
-        { num: 1, title: 'Core Movement Foundation', text: "Started with a custom character controller in Unity to get full control over acceleration, momentum and air control before adding any parkour moves on top." },
-        { num: 2, title: 'Vaulting and Climbing', text: "Added detection of low, mid and high obstacles, with the character automatically vaulting and/or climbing depending on the type of obstacle." },
-        { num: 3, title: 'Wall Running', text: "Built wall detection and a wall-run state that lets the player run along vertical surfaces while carrying their existing momentum into and out of the move." },
-        { num: 4, title: 'Chaining Movement', text: "Focused on the transitions between moves, so vaulting, wall-running and sprinting flow into each other rather than feeling like separate, disconnected actions." },
-        { num: 5, title: 'Camera and Feel', text: "Tuned FOV shifts and camera motion during traversal to sell the speed and momentum, in the same spirit as Mirror's Edge." },
-        { num: 6, title: 'Ongoing Expansion', text: "Still actively expanding the system with new traversal moves and refining the existing ones as I keep working on it." }
+        { num: 1, title: "Jump Physics from Feel", text: "Gravity and jump velocity are derived from two designer-friendly values, a 2.8 m apex reached in 0.35 seconds. Falling uses 2.8x gravity, and releasing jump early applies 2x for variable jump height. A 0.18 s jump buffer and coyote time make inputs forgiving." },
+        { num: 2, title: "Collision-Aware Movement", text: "A single component is the only code that moves the CharacterController. It supports velocity-driven movement and position-driven MoveTo with a deviation check, so a scripted arc that hits a wall (like a bar swing) knows to release instead of teleporting through it." },
+        { num: 3, title: "Wall-Running", text: "Gravity ramps up across the run, so the entry pop carries you up the wall before you curve back down, giving the short rising-then-falling arc of Mirror's Edge instead of a long flat float. A quick turn mid-run faces you away from the wall for a clean wall-jump, and a guard stops the same wall re-triggering a run." },
+        { num: 4, title: "Ledges from Pure Geometry", text: "Ledge hanging needs no special components. Any wall with a walkable top within reach can be caught. Edge-following probes let you shimmy around curved and angled ledges, and a back-jump launches you away with a speed bonus that chains into wall-runs for climbing shafts." },
+        { num: 5, title: "Mirror's Edge Controls", text: "One Up button handles both jumping and grabbing bars, pipes, ziplines and ledges, with a 0.25 s lockout so you don't instantly re-grab what you just let go of. There's also a 0.2 s 180-degree quick turn whose angle each state decides." },
+        { num: 6, title: "Slow Motion", text: "Time scale eases down on unscaled time and the physics timestep scales with it. Because CharacterController has no built-in interpolation, the camera interpolates the player's position by hand, so slow motion stays smooth." },
+        { num: 7, title: "Tooling and Performance", text: "A ParkourObstacle component sizes any mesh to the exact vault-tier dimensions with colour-coded gizmos. The ground-normal sphere cast is computed lazily, so it only runs for the states that actually read it." },
+        { num: 8, title: "Ongoing Expansion", text: "Still actively expanding the system with new traversal moves and refining the feel of the existing ones." }
       ]
     },
     {
       id: 'racingvr', tag: 'Unity · VR · Work In Progress', title: 'RacingVR',
-      blurb: 'A cockpit-first F1 racing game for PC VR, built in the hands-on style of VTOL VR.',
+      blurb: "An F1 sim for VR where you hold a real-feeling wheel, race real circuits built from map data, and hear an engine synthesised from nothing but maths.",
       wip: true, cover: 'images/car.jpg',
       role: 'Solo Developer', tools: 'Unity 6, C#, XR Interaction Toolkit, Meta Quest 3',
       gallery: [
@@ -481,17 +571,21 @@ class Component extends DCLogic {
         { src: 'images/frame6.jpg', caption: 'Trackside spectator camera' }
       ],
       localVideo: 'images/RacingVR.mp4', localVideoPoster: 'images/poster.jpg',
-      description: "RacingVR is a work-in-progress PC VR racing game inspired by the cockpit-focused, hands-on interaction style of VTOL VR. Rather than hiding controls behind menus or simple button presses, the player physically grabs the steering wheel, pulls the shift paddles and turns the rotary dials inside an F1-style cockpit, so racing feels tactile and grounded in VR. Underneath the cockpit sits a full car simulation (hybrid power unit, DRS, tyre wear and temperature) and a set of real-world circuits generated from map data. The aim is to support multiple cars and let players chase their own and their friends' lap times. I've been building it for around four months and testing it on a Meta Quest 3.",
+      description: "RacingVR is a work-in-progress PC VR racing game inspired by the hands-on cockpit of VTOL VR. Nothing is hidden behind menus: you physically grab the wheel, pull the shift paddles and twist the dials inside an F1 cockpit. Under that sits a proper simulation of a 2023-spec F1 car, real circuits generated from OpenStreetMap and elevation data, a racing line the game works out for itself, and engine audio built without a single recorded sample. The goal is multiple cars and racing your friends' lap times. I've been building it for around four months, testing on a Meta Quest 3.",
+      challenges: [
+        { title: "A wheel that feels like a wheel", problem: "VR hands float in the air with nothing to hold, so a wheel has to read steering from loose hand movements. Two hands must share it without fighting, and a hand just resting on the rim shouldn't steer.", solution: "With both hands on, the angle comes from the line between them, flattened onto the wheel's face. With one hand, it blends wrist twist and swing around the hub, trusting the swing more the further the hand is from the centre. Self-centring is a damped spring solved with backward Euler, so it stays stable at any frame rate. All of this lives in pure maths with no VR code, so it's covered by unit tests." },
+        { title: "Real circuits, no hand modelling", problem: "Modelling eight real circuits by hand, with accurate widths and hills, would take months per track.", solution: "An editor tool takes a circuit's lap from a dataset and snaps it onto OpenStreetMap raceway data, reading track widths from the map tags and throwing out pit lanes and disused sections. Real heights come from OpenTopoData and are spread along the lap. They're cached against the exact layout, so the hills can never land in the wrong place." },
+        { title: "A racing line the game works out", problem: "A hand-drawn racing line is just decoration, and it's wrong the moment the car or the track changes.", solution: "The line is a minimum-curvature path that stays within the tarmac, followed by a three-pass speed solve. That solve accounts for downforce, uphill and downhill gradients, crests where the car would leave the ground, rear-wheel traction and braking. It colours the line green for throttle, amber at the grip limit and red for braking." },
+        { title: "An engine with no recordings", problem: "Looped engine samples sound flat and repetitive, especially at the constantly changing revs of an F1 car.", solution: "The sound is synthesised live. Each cylinder fires at its own crank angle, and each firing rings fixed resonances, as a real exhaust does. The V6 can blend towards the uneven 90 and 150 degree firing pattern of a real F1 engine. On top sit a limiter cut about 30 times a second, overrun pops, MGU-K whine, tyre scrub that starts just before the grip limit so you hear it coming, and kerb buzz whose pitch is your speed." },
+        { title: "Fast VR without motion sickness", problem: "Hard braking and cornering in a headset makes a lot of people feel ill, but a vignette that's always on just narrows the view for no reason.", solution: "The vignette is driven by the car's actual acceleration, using only sideways and forward forces and ignoring suspension bounce. It closes quickly and opens slowly, and only the headset camera ever draws it, so the mirrors and spectator cameras stay clean." }
+      ],
       process: [
-        { num: 1, title: 'A Wheel You Actually Hold', text: "Built a grabbable VR steering wheel on top of the XR Interaction Toolkit, where both hands lock onto the rim and the wheel's rotation is worked out from where your hands move, rather than from a thumbstick. Hands snap into posed grips on the wheel so they stay mounted while you drive." },
-        { num: 2, title: 'Cockpit Controls', text: "Added shift paddles behind the wheel, pedals, pressable cockpit buttons and rotary dials you twist by hand, plus thumb controls on the wheel for quick inputs. Every control shares one base class, so new switches can be added to the cockpit without rewriting the grab logic." },
-        { num: 3, title: 'F1 Car Simulation', text: "Wrote the car's behaviour as its own maths layer: gearbox, a hybrid power unit with energy deployment tracked per lap, DRS zones, an overtake mode, tyre compounds and a tyre wear and temperature model. Car setups are data-driven so different cars can be tuned without touching code." },
-        { num: 4, title: 'Real Circuits from Map Data', text: "Built an editor tool that generates tracks from OpenStreetMap layouts, including elevation, kerbs, trackside objects, surrounding buildings and trees. It currently covers eight real circuits, including Silverstone, Spa, Monaco, Hungaroring, Hockenheim, Red Bull Ring, Sepang and Jeddah." },
-        { num: 5, title: 'Timing and the Racing Line', text: "Added a lap timer with sector timing, a live delta bar against your best lap, a working cockpit dashboard and a generated racing line, so players can see exactly where they're gaining or losing time." },
-        { num: 6, title: 'Sound and Comfort', text: "Engine audio is synthesised from the car's RPM and load rather than played from fixed loops. A comfort vignette that responds to the car's motion, plus working mirrors, keep the experience readable and comfortable at speed in a headset." },
-        { num: 7, title: 'Testing the Maths', text: "Kept the steering and vehicle maths in separate assemblies with Edit Mode unit tests covering steering, gearing, tyre wear and game feel, so physics changes can be checked without putting the headset on every time." },
-        { num: 8, title: 'Spectator Cameras', text: "Added TV-style race cameras and a spectator director that cuts between trackside angles automatically, for recording footage of laps from outside the cockpit." },
-        { num: 9, title: 'Up Next', text: "Next up are multiple selectable cars, saved best laps and a ghost car to race against, so players can compete on times with their friends." }
+        { num: 1, title: "Cockpit Controls", text: "Built pressable cockpit buttons, rotary dials you twist by hand, shift paddles, pedals and thumb controls on the wheel. They all share one base class, so new switches can be added to the cockpit without rewriting the grab logic." },
+        { num: 2, title: "A 2023-Spec Power Unit", text: "Modelled the hybrid power unit on the real regulations: a V6 turbo with a 120 kW MGU-K, an MGU-H and a 4 MJ energy store. Per-lap caps on harvesting and deployment are enforced, and the car harvests energy when you lift and coast." },
+        { num: 3, title: "Tyres That Heat Up", text: "Each tyre tracks surface zones across the tread and a carcass underneath. Grip is weighted by how much load each zone is carrying, and brake heat soaks into the carcass through the rim." },
+        { num: 4, title: "Timing and Feedback", text: "Added a lap timer, a live delta bar against your best lap, a working dashboard on the steering wheel and mirrors, so players can see exactly where they're gaining or losing time." },
+        { num: 5, title: "Spectator Cameras", text: "Added TV-style race cameras and a director that cuts between trackside angles automatically, for recording laps from outside the cockpit." },
+        { num: 6, title: "Up Next", text: "Next up are multiple selectable cars, saved best laps and a ghost car to race against, so players can compete on times with their friends." }
       ]
     }
   ];
@@ -684,6 +778,25 @@ class Component extends DCLogic {
       navLinksDisplay: isMobile ? 'none' : 'flex',
       lightboxArrowGap: isMobile ? '8px' : '24px',
       openArtMobile: (e) => { e.preventDefault(); this.setState({ showArt: true, mobileMenuOpen: false }); window.scrollTo(0, 0); },
+      featuredProject: this.projects[0],
+      otherProjects: this.projects.slice(1).map(p => {
+        if (!p.wip) return p;
+        const pct = p.id === 'racingvr'
+          ? (this.props.racingvrProgress ?? 25)
+          : (this.props.parkourProgress ?? 58);
+        return Object.assign({}, p, { cover: this.wipCover(pct) });
+      }),
+      featuredGrid: isMobile ? '1fr' : 'minmax(0, 1.35fr) minmax(0, 1fr)',
+      featuredGap: isMobile ? '18px' : '32px',
+      featuredPad: isMobile ? '22px 22px 26px' : '26px 36px 32px',
+      featuredInset: isMobile ? '20px' : '36px',
+      featuredAspect: isMobile ? '2 / 1' : '2.4 / 1',
+      featuredMoods: [
+        { src: 'images/honsSun.png', alt: 'Happy: the forest bright and sunlit', label: 'Happy', delay: '0s', cls: 'mood-first' },
+        { src: 'images/honsAsh.png', alt: 'Angry: the forest filled with ash and haze', label: 'Angry', delay: '4s', cls: '' },
+        { src: 'images/honsRain.png', alt: 'Sad: the forest dark and rainy', label: 'Sad', delay: '8s', cls: '' }
+      ],
+      featuredAwardBadge: (this.projects[0].awards || []).length > 1 ? (this.projects[0].awards.length + ' Awards') : 'Award Winner',
       projects: this.projects.map(p => {
         if (!p.wip) return p;
         const pct = p.id === 'racingvr'
